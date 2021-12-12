@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Pawn Moving on Chess Board</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="">
+<link rel="stylesheet" href="index.css">
+<style>
+
+</style>
+<script src=""></script>
+<body>
+
+<!-- Start App -->
+<div id="chess-board">
+    <div id="player" class="slow-move"><span class="icon">♙</span></div>
+</div>
+
+
+
+<a href="#" class="float">
+    <h4 id="hintPawn" class="my-float">Hints</h4>
+</a>
+
+<a href="#" class="float info-btn">
+    <h4 id="infoBtn" class="my-float">Info</h4>
+</a>
+
+
+<div id="instruction-area" class="hide">
+    <h3>Description:</h3>
+    <p>● The application is a simulation of a Pawn moving on a chess board, of dimensions 8
+        squares x 8 squares.</p>
+    <p>● There are no other obstructions/pieces on the chess board.</p>
+    <p>● The pawn is free to roam around the surface of the table following the rules below,
+    but must be prevented from falling off. Any movement that would result in the pawn
+    falling from the table must be prevented, however further valid movement commands
+        must still be allowed.</p>
+    <p>● The pawn can move only to adjacent squares but not diagonally. The first time that
+        the pawn moves it can move 1 or 2 squares.</p>
+    <p>● Create an application that can read in commands of the following form: <br/>
+        &nbsp;&nbsp;&nbsp;○ PLACE X,Y,F,C <br/>
+        &nbsp;&nbsp;&nbsp;○ MOVE X <br/>
+        &nbsp;&nbsp;&nbsp;○ LEFT <br/>
+        &nbsp;&nbsp;&nbsp;○ RIGHT <br/>
+        &nbsp;&nbsp;&nbsp;○ REPORT</p>
+    <p>● PLACE will put the pawn on the board in position X, Y, facing NORTH, SOUTH,
+    EAST or WEST and Colour(White or Black)</p>
+    <p>● The origin (0,0) can be considered to be the SOUTH WEST most corner.</p>
+    <p>● The first valid command to the pawn is a PLACE command, after that, any sequence
+    of commands may be issued, in any order, including another PLACE command. The
+    application should discard all commands in the sequence until a valid PLACE
+    command has been executed.</p>
+    <p>● MOVE will move the pawn one unit forward in the direction it is currently facing.
+    <p>● LEFT and RIGHT will rotate the pawn 90 degrees in the specified direction without
+    changing the position of the pawn.</p>
+    <p>● REPORT will announce the X,Y,F and C of the pawn. This can be in any form, but
+    standard output is sufficient.</p>
+    <p>● If the pawn is not on the board it needs to ignore the MOVE, LEFT, RIGHT and
+    REPORT commands.</p>
+    <p>● Input can be from a file, from standard input or through a UI with four buttons and
+    scrolling log of the result, as the developer chooses. (This might depend on the dev
+    stack you use)</p>
+    <p>● Provide test data to exercise the application.</p>
+</div>
+
+<!-- End App -->
+
+<script src="jquery.js"></script>
+<script src="jquery-ui.js"></script>
+<script src="index.js"></script>
+
+<script>
+    $(function () {
+        $(".draggable").draggable();
+    });
+</script>
+
+</body>
+</html>
