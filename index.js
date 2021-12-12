@@ -1,20 +1,19 @@
 const rank = [1, 2, 3, 4, 5, 6, 7, 8];
 const file = ["A", "B", "C", "D", "E", "F", "G", "H"];
-let currentTile = {};
+let currentTile = null;
+let tmpTile = null;
 let count = 0;
 let reports = [];
-
+let lastAction = "";
 
 const init = function () {
     for (let r = rank.length; r >  0; r--) {
         for (let f = 0; f < file.length; f++) {
-
             // Append tile
             let style = '';
             if (count % 8 == 0) {
                 style = 'clear:left';
             }
-
             let coordinate = file[f] + r;
             $("#chess-board").append('<div class="tile" style="' + style + '">' + coordinate + '</div>');
 
@@ -32,7 +31,7 @@ const init = function () {
 }
 
 let moveCount = 0;
-const legalMove = function () {
+const checkMove = function () {
     $(".tile").removeClass('legal');
 
     const x = currentTile.attr('coordinate');
@@ -57,17 +56,43 @@ function placePawn(t) {
     let player = $("#player");
     player.removeClass("hide");
 
+    tmpTile = currentTile;
     currentTile = $(t);
     let midY = currentTile.position().top += (currentTile.width() / 2);
     let midX = currentTile.position().left += (currentTile.width() / 2);
     $(".tile").removeClass('legal');
     player.css({"top": midY - (0.5 * player.width()), "left": midX - (0.5 * player.width())});
 
-    moveCount++;
+
+
+    const x = currentTile.attr('coordinate');
+
+    let direction = "South"; // NOTE: Pawn can only move to the north now
+    let y = null;
+    if (tmpTile) {
+        y = tmpTile.attr('coordinate');
+        if (parseInt(x.charAt(1)) > y.charAt(1) ) {
+            direction = "North";
+        }
+    }
 
     reports.push( {
+        tmp_f: (y)? y.charAt(0) : null,
+        tmp_r: (y)? parseInt(y.charAt(1)): null,
+        tmp_color: (y)? tmpTile.attr('color'): null,
 
-    } )
+        f: x.charAt(0),
+        r: parseInt(x.charAt(1)),
+        color: currentTile.attr('color'),
+        direction,
+        count: moveCount,
+
+        lastAction
+    });
+
+    console.log("Reports", reports);
+
+    moveCount++;
 }
 
 $(document).ready(function ($) {
@@ -87,7 +112,7 @@ $(document).ready(function ($) {
      * Hint to check allowed steps
      */
     $("#hintPawn").on('click', function () {
-        legalMove();
+        checkMove();
     });
 
     let showInfo = false;
@@ -107,7 +132,13 @@ $(document).ready(function ($) {
         console.log("PLACE");
         $('*[coordinate="A1"]').trigger('click'); // first position
     });
+
     $("#command-move").on('click', function () {
+        lastAction = "MOVE";
+        if (!currentTile) {
+            alert("Please place a pawn!");
+            return false;
+        }
         console.log("MOVE");
         $("span#player-icon").css({"transform" : "rotate(0deg)" });
         const x = currentTile.attr('coordinate');
@@ -121,16 +152,35 @@ $(document).ready(function ($) {
         }
 
     });
+
     $("#command-left").on('click', function () {
-        console.log("LEFT");
+        // LEFT and RIGHT will rotate the pawn 90 degrees in the specified direction without
+        // changing the position of the pawn.
+        lastAction = "LEFT";
         $("span#player-icon").css({"transform" : "rotate(-90deg)" });
     });
+
     $("#command-right").on('click', function () {
+        // LEFT and RIGHT will rotate the pawn 90 degrees in the specified direction without
+        // changing the position of the pawn.
+        lastAction = "RIGHT";
         $("span#player-icon").css({"transform" : "rotate(90deg)" });
     });
+
     $("#command-report").on('click', function () {
         $("#report-area").removeClass("hide");
         $("#instruction-area").addClass("hide");
+
+        reports.forEach((v, index) => {
+            $("#report-body").html( $("#report-body").html() + `
+            <ul>
+                <li>PLACE (${(v.tmp_f)? v.tmp_f : 'A' }, ${(v.tmp_r)? v.tmp_r : '0' }), ${(v.direction) ? v.direction : "-"}, ${v.color}</li> 
+                <li> ${lastAction}  ${v.count+1}</li>
+                <li>REPORT</li>
+                <li>PLACE ${(v.f)? v.f : 'A' },${(v.r)? v.r : '0' }, ${(v.direction) ? v.direction : "-"}, ${v.color}</li> 
+            </ul>
+            `);
+        });
     });
 });
 
