@@ -5,15 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="">
 <link rel="stylesheet" href="index.css">
-<style>
-
-</style>
-<script src=""></script>
 <body>
 
 <!-- Start App -->
 <div id="chess-board">
-    <div id="player" class="slow-move"><span class="icon">♙</span></div>
+    <div id="player" class="hide slow-move"><span class="icon" id="player-icon">♙</span></div>
 </div>
 
 <a href="#" class="float">
@@ -25,10 +21,25 @@
 </a>
 
 <div id="command-area">
-    <button id="place-pawn" class="command-button">PLACE</button>
-    <button id="command-move" class="command-button">MOVE</button>
-    <button id="command-left" class="command-button">LEFT</button>
-    <button id="command-right" class="command-button">RIGHT</button>
+    <div class="place-wrapper">
+        <span style="font-style: italic;font-size: 14px;">*press enter or click <strong>PLACE</strong> to start, and esc to reset.</span> <br/>
+        <button id="place-pawn" class="command-button" style="width: 425px;">PLACE</button>
+    </div>
+    <div class="btn-controls hide">
+        <button id="command-move" class="command-button">MOVE</button>
+        <button id="command-left" class="command-button"> &#5130; LEFT</button>
+        <button id="command-right" class="command-button">RIGHT &#5125;</button>
+    </div>
+    <div class="btn-controls hide">
+        <button id="command-report" class="command-button" style="width: 425px;">Report</button>
+        <br/>
+        <a class="command-button" style="width: 406px;" onclick="location.reload();">Restart</a>
+    </div>
+</div>
+
+<div id="report-area" class="hide">
+    <h3>Reports:</h3>
+    <div id="report-body" style="background: #ffffaa"></div>
 </div>
 
 <div id="instruction-area" class="hide">

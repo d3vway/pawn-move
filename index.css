@@ -75,6 +75,14 @@ span.icon {
     margin-top: 0px;
 }
 
+#report-area {
+    font-family: Arial;
+    position: absolute;
+    margin-left: 550px;
+    width: 50%;
+    margin-top: 0px;
+}
+
 .hover {
     -webkit-box-shadow: inset 0px 0px 5px 5px rgba(50, 150, 25, .5);
     box-shadow: inset 0px 0px 5px 5px rgba(50, 150, 25, .5);
@@ -152,4 +160,10 @@ span.icon {
     display: inline-block;
     font-size: 16px;
     margin: 4px 2px;
+    width: 136px;
+}
+
+.btn-controls {
+    width: 428px;
+    text-align: center
 }

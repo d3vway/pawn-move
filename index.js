@@ -2,6 +2,8 @@ const rank = [1, 2, 3, 4, 5, 6, 7, 8];
 const file = ["A", "B", "C", "D", "E", "F", "G", "H"];
 let currentTile = {};
 let count = 0;
+let reports = [];
+
 
 const init = function () {
     for (let r = rank.length; r >  0; r--) {
@@ -20,9 +22,9 @@ const init = function () {
 
             // Tile's color
             if (((r % 2 == 0) && (f % 2 != 0)) || ((r % 2 != 0) && (f % 2 == 0))) {
-                $(".tile").eq(count).addClass("black");
+                $(".tile").eq(count).addClass("black").attr("color", "black");
             } else {
-                $(".tile").eq(count).addClass("white");
+                $(".tile").eq(count).addClass("white").attr("color", "white");
             }
             count++;
         }
@@ -50,14 +52,22 @@ const legalMove = function () {
 }
 
 function placePawn(t) {
+    $("span#player-icon").css({"transform" : "rotate(0deg)" });
+
+    let player = $("#player");
+    player.removeClass("hide");
+
     currentTile = $(t);
     let midY = currentTile.position().top += (currentTile.width() / 2);
     let midX = currentTile.position().left += (currentTile.width() / 2);
-    let player = $("#player");
     $(".tile").removeClass('legal');
     player.css({"top": midY - (0.5 * player.width()), "left": midX - (0.5 * player.width())});
 
     moveCount++;
+
+    reports.push( {
+
+    } )
 }
 
 $(document).ready(function ($) {
@@ -65,21 +75,24 @@ $(document).ready(function ($) {
 
     $(".tile").on('click', function () {
         placePawn(this);
-    })
-        .on('mouseenter', function () {
-            $(this).addClass('hover');
-        })
+        $(".btn-controls").removeClass("hide");
+        $(".place-wrapper").addClass("hide");
+    }).on('mouseenter', function () {
+        $(this).addClass('hover');
+    }).on('mouseleave', function () {
+        $(this).removeClass('hover');
+    });
 
-        .on('mouseleave', function () {
-            $(this).removeClass('hover');
-        });
-
+    /**
+     * Hint to check allowed steps
+     */
     $("#hintPawn").on('click', function () {
         legalMove();
     });
 
     let showInfo = false;
     $("#infoBtn").on('click', function () {
+        $("#report-area").addClass("hide");
         const info = $("#instruction-area");
         if (!showInfo) {
             info.removeClass('hide');
@@ -88,8 +101,59 @@ $(document).ready(function ($) {
             info.addClass('hide');
             showInfo = false;
         }
-    })
+    });
 
-    $('*[coordinate="A1"]').trigger('click'); // first position
+    $("#place-pawn").on('click', function () {
+        console.log("PLACE");
+        $('*[coordinate="A1"]').trigger('click'); // first position
+    });
+    $("#command-move").on('click', function () {
+        console.log("MOVE");
+        $("span#player-icon").css({"transform" : "rotate(0deg)" });
+        const x = currentTile.attr('coordinate');
+        const f = x.charAt(0);
+        const r = parseInt(x.charAt(1))+1; // stepping
 
+        if (r > rank.length) {
+            alert("cannot move next, reaching maximum board length!");
+        } else {
+            $('*[coordinate="'+(f+r)+'"]').trigger('click');
+        }
+
+    });
+    $("#command-left").on('click', function () {
+        console.log("LEFT");
+        $("span#player-icon").css({"transform" : "rotate(-90deg)" });
+    });
+    $("#command-right").on('click', function () {
+        $("span#player-icon").css({"transform" : "rotate(90deg)" });
+    });
+    $("#command-report").on('click', function () {
+        $("#report-area").removeClass("hide");
+        $("#instruction-area").addClass("hide");
+    });
+});
+
+
+$(document).keydown(function(e) {
+    switch(e.keyCode) {
+        case 13:
+            $('*[coordinate="A1"]').trigger('click'); // first position
+            break;
+        case 27:
+            location.reload(); // reset
+            break;
+        case 38:
+            $("#command-move").trigger('click');
+            break;
+        case 37:
+            $("#command-left").trigger('click');
+            break;
+        case 39:
+            $("#command-right").trigger('click');
+            break;
+        case 40:
+            alert("Pawn cannot step back!")
+            break;
+    }
 });
